@@ -1,6 +1,7 @@
 // Backend script to scrape Momentums for data and pipe it to the Zenon Wall
-// Add this .dart to znn_cli_dart-master and run with the params below
-// Usage: wall_engine.dart -u ws://10.0.0.192:35998 test
+// It will retrieve all messages since the last execution, value stored in lastMomentum.txt
+// Update node address before executing
+// TODO: port to Linux
 
 import 'dart:async';
 import 'dart:convert';
@@ -11,19 +12,21 @@ import 'package:html/parser.dart';
 import 'package:process_run/shell.dart';
 import 'package:znn_sdk_dart/znn_sdk_dart.dart';
 
-import 'init_znn.dart';
-
 var path = 'C:\\Users\\user\\web\\sol-sanctum.github.io\\';
+var jekyll = 'C:\\Ruby31-x64\\bin\\jekyll'; //req'd because Shell() uses a special PATH var
+var node = "ws://10.0.0.192:35998";
 
 Future<int> main(List<String> args) async {
-  return initZnn(args, handleCli);
+  final Zenon znnClient = Zenon();
+  await znnClient.wsClient.initialize(node, retry: false);
+  handleCli(znnClient);
+  return 0;
 }
 
 void buildAndPush(String path, var height) async {
   // Jekyll Build project
   var shell = Shell();
   shell = shell.cd(path);
-  var jekyll = 'C:\\Ruby31-x64\\bin\\jekyll';
 
   try {
     await shell.run('''
@@ -50,8 +53,8 @@ String formatHTML(String args) {
   final parsedJson = jsonDecode(args);
 
   DateTime date =
-      DateTime.fromMillisecondsSinceEpoch(int.parse(parsedJson['time']) * 1000)
-          .toUtc();
+  DateTime.fromMillisecondsSinceEpoch(int.parse(parsedJson['time']) * 1000)
+      .toUtc();
   var d2 = date.toString().substring(0, date.toString().length - 5);
 
   var sanitizedData = sanitizeHtml(parsedJson['data']);
@@ -123,15 +126,15 @@ List extractMomentumData(DetailedMomentumList getDetailedMomentumsByHeight) {
   return messages;
 }
 
-Future<void> handleCli(List<String> args) async {
-  final Zenon znnClient = Zenon();
+Future<void> handleCli(Zenon znnClient) async {
+  //final Zenon znnClient = Zenon();
 
   while (true) {
     List messages = [];
 
     //Get Current Momentum
     Momentum currentFrontierMomentum =
-        await znnClient.ledger.getFrontierMomentum();
+    await znnClient.ledger.getFrontierMomentum();
     print(
         'Current Momentum height: ${currentFrontierMomentum.height.toString()} || timestamp: ${DateTime.fromMillisecondsSinceEpoch(currentFrontierMomentum.timestamp * 1000)}');
     int height = currentFrontierMomentum.height;
@@ -157,12 +160,12 @@ Future<void> handleCli(List<String> args) async {
 
       for (var i = 0; i < loops; i++) {
         DetailedMomentumList getDetailedMomentumsByHeight =
-            await znnClient.ledger.getDetailedMomentumsByHeight(start, 200);
+        await znnClient.ledger.getDetailedMomentumsByHeight(start, 200);
         messages += await extractMomentumData(getDetailedMomentumsByHeight);
         start += 200;
       }
       DetailedMomentumList getDetailedMomentumsByHeight =
-          await znnClient.ledger.getDetailedMomentumsByHeight(start, remainder);
+      await znnClient.ledger.getDetailedMomentumsByHeight(start, remainder);
       messages += await extractMomentumData(getDetailedMomentumsByHeight);
       file.writeAsString('$height');
     }
