@@ -1,10 +1,10 @@
 # Site settings
 title: "Zenon.fun"
 email: cryptovagrant@pm.me
-description: "A simple website to host interesting and fun Zenon projects."
+description: "A place to host interesting and fun Zenon projects."
 baseurl: ""
 url: "http://www.zenon.fun/"
-title_description: "A simple website to host interesting and fun Zenon projects."
+title_description: "A place to host interesting and fun Zenon projects."
 title_image: "./img/zenon.jpg"
 #google_analytics: "UA-20365477-4"
 #disqus_account: 
@@ -24,8 +24,8 @@ xing_link:
 facebook_link:
 
 # Footer
-footer_left: "Made with <i class=\"fa fa-heart\"></i> by <a href=\"https://twitter.com/sol_sanctum\">Sol Sanctum</a>"
-footer_right: "&lt;/&gt; on <a href=\"https://github.com/\">Github</a> &nbsp;<i class=\"fa fa-github-alt\"></i>"
+footer_left: "Made with <i class=\"fa fa-heart\"></i> by <a href=\"https://github.com/Sol-Sanctum\">Sol Sanctum</a>"
+footer_right: "&lt;/&gt; on <a href=\"https://github.com/Sol-Sanctum/sol-sanctum.github.io\">Github</a> &nbsp;<i class=\"fa fa-github-alt\"></i>"
 
 # Build settings
 markdown: kramdown

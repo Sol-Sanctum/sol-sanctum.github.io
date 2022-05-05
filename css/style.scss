@@ -734,8 +734,7 @@ ul {
 
 .related {
 	margin-top: 50px;
-	text-align: center;
-
+	
 	.related-header {
 		margin-top: -30px;
 		margin-bottom: 20px;
@@ -758,6 +757,7 @@ ul {
 		padding-top:20px;
 		font-size: 24px;
 		margin-bottom: 20px;
+		
 
 		@media (min-width: $screen-sm-min) {
 			font-size: 36px;
@@ -770,6 +770,11 @@ ul {
 		a:hover {
 			color: $light;
 		}
+	}
+	
+	.excerpt {
+		text-align: left;
+		font-size: 14px;
 	}
 
 	p {
